@@ -64,7 +64,7 @@ class KakaoBookSearchViewController: UIViewController {
         
         let url = "https://dapi.kakao.com/v3/search/book.json?query=\(query)"
         
-        let headers: HTTPHeaders = ["Authorization" : "KakaoAK 2ce94d0129cdefdd0351c48db82e30e8"]
+        let headers: HTTPHeaders = ["Authorization" : APIKey.kakao]
         
         
         AF.request(url, method: .get, headers: headers).responseDecodable(of: Book.self) { response in
