@@ -9,19 +9,6 @@ import UIKit
 import Alamofire
 import SnapKit
 
-
-struct Book: Decodable {
-    let documents: [BookDetail]
-}
-
-struct BookDetail: Decodable {
-    let contents: String
-    let price : Int
-    let title: String
-    let thumbnail: String
-}
-
-
 class KakaoBookSearchViewController: UIViewController {
     
     let searchBar = UISearchBar()
