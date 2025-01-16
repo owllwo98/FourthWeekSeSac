@@ -7,6 +7,37 @@
 
 import UIKit
 import SnapKit
+import Alamofire
+
+/*
+ 서버에서 키를 바꾸면 앱이 터진다
+ 1. 옵셔널을 통해 해결
+ 2. CodingKeys 를 통해 해결 -> DecodingStrategy
+ */
+
+struct Market: Decodable {
+    let market: String
+    let name: String?
+    let korean: String
+    let english: String
+    
+    // 멤버와 값의 분리
+    enum CodingKeys: String, CodingKey {
+        case market
+        case name
+        case korean = "korean_name"
+        case english = "english_name"
+    }
+    
+//    init(from decoder: Decoder) throws {
+//        let container = try decoder.container(keyedBy: CodingKeys.self)
+//        self.market = try container.decode(String.self, forKey: .market)
+//        self.name = try container.decodeIfPresent(String.self, forKey: .name)
+//        self.korean = try container.decode(String.self, forKey: .korean)
+//        self.english = try container.decode(String.self, forKey: .english)
+//    }
+}
+
 
 class MarketViewController: UIViewController {
  
@@ -19,8 +50,26 @@ class MarketViewController: UIViewController {
 
         configureView()
         configureTableView()
+        callRequest()
 
     }
+    
+    func callRequest() {
+        let url = "https://api.upbit.com/v1/market/all"
+        
+        AF.request(url, method: .get)
+            .responseDecodable(of: [Market].self) { response in
+                
+                switch response.result {
+                
+            case.success(let value):
+                    print(value)
+            case.failure(let error) :
+                print(error)
+            }
+        }
+    }
+    
     
     func configureTableView() {
         view.addSubview(tableView)

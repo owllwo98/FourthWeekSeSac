@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: scene)
         
         let nav = UINavigationController(rootViewController: RandomViewController())
-        window?.rootViewController = KakaoBookSearchViewController()
+        window?.rootViewController = BookViewController()
         window?.makeKeyAndVisible()
     }
 
