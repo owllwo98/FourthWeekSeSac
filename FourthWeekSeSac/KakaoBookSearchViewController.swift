@@ -74,42 +74,22 @@ class KakaoBookSearchViewController: UIViewController {
     
     func callRequest() {
         print(#function)
-        
         query = searchBar.text ?? "네이버"
         
-        let url = "https://dapi.kakao.com/v3/search/book.json?query=\(query)&size=20&page=\(page)"
-        
-        let headers: HTTPHeaders = ["Authorization" : APIKey.kakao]
-        
-        // 상태 코드 (200, 401, 404 ...) .validate(statusCode: 200..<300) -> 200 ~ 299 까지를 success 로 보겠다.
-        AF.request(url, method: .get, headers: headers)
-            .validate(statusCode: 200..<300)
-            .responseDecodable(of: Book.self) { response in
+        NetworkManager.shared.callKakaoBookAPI(query: query, page: page) { value in
             
-//                print(response.response?.statusCode)
-                
-            switch response.result {
-                
-            case.success(let value):
-                // page 1 1-20 page 2 21-40
-//                self.list.append(contentsOf: value.documents)
-                
-                self.isEnd = value.meta.is_end
-                
-                if self.page == 1 {
-                    self.list = value.documents
-                } else {
-                    self.list.append(contentsOf: value.documents)
-                }
-                
-                self.tableView.reloadData()
-                
-                if self.page == 1 {
-                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-                }
-                
-            case.failure(let error) :
-                print(error)
+            self.isEnd = value.meta.is_end
+            
+            if self.page == 1 {
+                self.list = value.documents
+            } else {
+                self.list.append(contentsOf: value.documents)
+            }
+            
+            self.tableView.reloadData()
+            
+            if self.page == 1 {
+                self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
             }
         }
     }
@@ -143,8 +123,8 @@ extension KakaoBookSearchViewController: UITableViewDelegate, UITableViewDataSou
         
         let url = URL(string: data.thumbnail)
         
-        cell.titleLabel.text = "타이틀 레이블: \(data.title)"
-        cell.overviewLabel.text = "줄거리 레이블: \(data.contents)"
+        cell.titleLabel.text = "\(data.title)"
+        cell.overviewLabel.text = "\(data.contents)"
         cell.thumbnailImageView.backgroundColor = .brown
         cell.thumbnailImageView.kf.setImage(with: url)
 

@@ -46,6 +46,10 @@ class ViewController: UIViewController {
         return btn
     } ()
     
+    lazy var button = {
+        self.test()
+    }
+    
     // BookViewController 로 전환하는 버튼
     @objc
     func nextButtonTapped() {
@@ -87,6 +91,7 @@ class ViewController: UIViewController {
         autoLayoutSnapKit2()
         configureButton()
         
+        button().backgroundColor = .brown
         
     }
     
@@ -190,7 +195,9 @@ class ViewController: UIViewController {
     func autoLayoutSnapKit2() {
         view.addSubview(redView)
         view.addSubview(grayView)
+        view.addSubview(button())
         redView.addSubview(greenView)
+        
         
         let array = [1,2,3,4,5]
         
@@ -204,6 +211,11 @@ class ViewController: UIViewController {
             make.center.equalToSuperview()
         }
         
+        button().snp.makeConstraints { make in
+            make.top.equalTo(redView.snp.bottom).inset(-16)
+            make.horizontalEdges.equalToSuperview().inset(16)
+        }
+        
         greenView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -213,6 +225,8 @@ class ViewController: UIViewController {
             make.edges.equalTo(redView).inset(50)
             
         }
+        
+        
         
     }
     
